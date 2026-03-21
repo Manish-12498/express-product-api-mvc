@@ -64,8 +64,8 @@ const addProduct = async (req, res) => {
                 message: "Name and Price are Required "
             });
         }
-        price=Number(price);
-        stock= Number(stock) || 0;
+        price = Number(price);
+        stock = Number(stock) || 0;
         if (isNaN(price) || price <= 0) {
             return res.status(400).json({
                 success: false,
@@ -76,9 +76,9 @@ const addProduct = async (req, res) => {
             {
                 name,
                 description,
-                price, 
-                category, 
-                stock 
+                price,
+                category,
+                stock
             });
 
         return res.status(201).json({
@@ -95,9 +95,56 @@ const addProduct = async (req, res) => {
 
 }
 
+const updateProductById = async (req, res) => {
+    const ProductId = req.params.id;
+
+    try {
+        let { name, description, price, category, stock } = req.body;
+
+        if (!name || price === undefined) {
+            return res.status(400).json({
+                success: false,
+                message: "Name and Price are Required "
+            });
+        }
+        price = Number(price);
+        stock = Number(stock) || 0;
+
+        if (isNaN(price) || price <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Price cannot be negative OR Zero "
+            });
+        }
+        const updateProduct = await ProductModel.findByIdAndUpdate(ProductId, { name, description, price, category, stock },{new:true});
+        if (!updateProduct) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: updateProduct
+        });
+
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: error.message
+        });
+
+    }
+
+}
 
 module.exports = {
     getProduct,
     getProductById,
     addProduct,
+    updateProductById,
+
+    
 }

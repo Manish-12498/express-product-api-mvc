@@ -5,11 +5,12 @@ const {
     getProduct,
     getProductById,
     addProduct,
+    updateProductById,
 
-}=require("../controllers/productController")
+}=require("../controllers/product.controller")
 
 router.route("/products").get(getProduct).post(addProduct);
-router.get("/products/:id",getProductById);
+router.route("/products/:id",).get(getProductById).patch(updateProductById);
 
 
 module.exports = router
