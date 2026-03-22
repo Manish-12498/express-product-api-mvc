@@ -1,5 +1,4 @@
 const ProductModel = require("../model/productModel");
-const Prodct = require("../model/productModel");
 
 
 //Bussiness Logic
@@ -9,14 +8,15 @@ const getProduct = async (req, res) => {
     try {
         const allProducts = await ProductModel.find();
         if (!allProducts || allProducts.length === 0) {
-            return res.json({
+            return res.status(404).json({
+                success:false,
                 message: "There is no Product"
             });
 
         }
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: allProducts
+            data: allProducts
         });
     } catch (error) {
         res.status(500).json({
@@ -34,15 +34,15 @@ const getProductById = async (req, res) => {
         const Product = await ProductModel.findById(req.params.id);
 
         if (!Product) {
-            res.status(404).json({
+            return res.status(404).json({
                 success: false,
                 message: "There is no Product"
             });
 
         }
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: Product
+            data: Product
         });
 
     } catch (error) {
@@ -58,7 +58,7 @@ const addProduct = async (req, res) => {
     try {
         let { name, description, price, category, stock } = req.body;
 
-        if (!name || !price === undefined) {
+        if (!name || price === undefined) {
             return res.status(400).json({
                 success: false,
                 message: "Name and Price are Required "
@@ -82,7 +82,7 @@ const addProduct = async (req, res) => {
             });
 
         return res.status(201).json({
-            succes: true,
+            success: true,
             data: newProduct
         });
 
@@ -116,7 +116,7 @@ const updateProductById = async (req, res) => {
                 message: "Price cannot be negative OR Zero "
             });
         }
-        const updateProduct = await ProductModel.findByIdAndUpdate(ProductId, { name, description, price, category, stock },{new:true});
+        const updateProduct = await ProductModel.findByIdAndUpdate(ProductId, { name, description, price, category, stock }, { new: true });
         if (!updateProduct) {
             return res.status(404).json({
                 success: false,
@@ -140,11 +140,41 @@ const updateProductById = async (req, res) => {
 
 }
 
+const deleteProductById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedProduct = await ProductModel.findByIdAndDelete(id);
+
+        if (!deletedProduct) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Product deleted successfully"
+
+        });
+
+    }catch(error){
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: error.message
+        });
+
+    }
+    
+}
+
 module.exports = {
     getProduct,
     getProductById,
     addProduct,
     updateProductById,
+    deleteProductById,
 
-    
+
 }
