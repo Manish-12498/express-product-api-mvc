@@ -9,12 +9,14 @@ A RESTful Product API built with **Node.js**, **Express**, and **MongoDB**, foll
 ```
 express-product-api-mvc/
 ├── config/
-│   └── db.js               # MongoDB connection setup
+│   └── db.js                        # MongoDB connection setup
+├── controllers/
+|   └── product.controller.js        #Product controllers        
 ├── routes/
-│   └── product.routes.js   # Product API routes
-├── app.js                  # Express app setup & middleware
-├── server.js               # Entry point – DB connect & server start
-├── .env                    # Environment variables (not committed)
+│   └── product.routes.js            # Product API routes
+├── app.js                           # Express app setup & middleware
+├── server.js                        # Entry point – DB connect & server start
+├── .env                             # Environment variables (not committed)
 ├── .gitignore
 └── package.json
 ```
